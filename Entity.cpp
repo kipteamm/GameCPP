@@ -100,26 +100,9 @@ Entity* Wall::interacts(Player* player) {
     const int posX = player->getPosition().x % 700;
     const int posY = player->getPosition().y % 700;
 
-    if (posX == 0) {
-        player->setPosition(Position{player->getPosition().x + 100, player->getPosition().y});
-        return nullptr;
-    }
+    if (posX != 0 && posX != 600 && posY != 0 && posY != 600) return nullptr;
 
-    if (posX == 600) {
-        player->setPosition(Position{player->getPosition().x - 100, player->getPosition().y});
-        return nullptr;
-    }
-
-    if (posY == 0) {
-        player->setPosition(Position{player->getPosition().x, player->getPosition().y + 100});
-        return nullptr;
-    }
-
-    if (posY == 600) {
-        player->setPosition(Position{player->getPosition().x, player->getPosition().y - 100});
-        return nullptr;
-    };
-
+    player->setPosition(player->getPreviousPosition());
     return nullptr;
 }
 
