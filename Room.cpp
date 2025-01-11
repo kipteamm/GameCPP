@@ -26,7 +26,11 @@ void Room::update(sf::Event* event) {
         if (entity == this->player) continue;
         entity->update(event);
 
-        if (entity->getPosition() == this->player->getPosition()) entity->interacts(this->player);
+        if (!(entity->getPosition() == this->player->getPosition())) continue;
+        Entity* entityToBeRemoved = entity->interacts(this->player);
+
+        if (entityToBeRemoved == nullptr) continue;
+        this->removeEntity(entityToBeRemoved);
     }
 }
 
@@ -44,9 +48,15 @@ void Room::setPlayer(Player *player) {
     this->player = player;
 }
 
-void Room::removePlayer() {
-    this->entities.erase(std::remove(this->entities.begin(), this->entities.end(), this->player), this->entities.end());
-    this->player = nullptr;
+void Room::removeEntity(Entity* entity) {
+    this->entities.erase(std::remove(this->entities.begin(), this->entities.end(), entity), this->entities.end());
+
+    if (entity == this->getPlayer()) {
+        this->player = nullptr;
+        return;
+    };
+
+    this->addEntity(new Floor(entity->getPosition()));
 }
 
 

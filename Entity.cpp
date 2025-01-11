@@ -36,16 +36,17 @@ void Entity::setPosition(const Position position) {
     this->position = position;
 }
 
-void Entity::interacts(Player* player) {
-
+Entity* Entity::interacts(Player* player) {
+    return nullptr;
 }
 
-Player::Player(const Position position) : Entity(position) {
+Player::Player(const Position position, const int attackPower) : Entity(position), attackPower(attackPower) {
     this->setSprite("../resources/player.png");
 }
 
 void Player::update(sf::Event* event) {
     Position position = this->getPosition();
+    this->setPreviousPosition(position);
     switch (event->key.code) {
         case sf::Keyboard::Left:
             this->setPosition(Position{position.x - 100, position.y});
@@ -63,6 +64,14 @@ void Player::update(sf::Event* event) {
     }
 }
 
+void Player::setPreviousPosition(Position position) {
+    this->previousPosition = position;
+}
+
+Position Player::getPreviousPosition() const {
+    return this->previousPosition;
+}
+
 int Player::getAttackPower() const {
     return this->attackPower;
 }
@@ -75,28 +84,34 @@ Weapon::Weapon(const Position position) : Entity(position) {
     this->setSprite("../resources/weapon.png");
 }
 
+Entity* Weapon::interacts(Player* player) {
+    player->setAttackPower(1);
+    return this;
+}
+
 Wall::Wall(const Position position) : Entity(position) {
     this->setSprite("../resources/wall.png");
 }
 
-void Wall::interacts(Player* player) {
+Entity* Wall::interacts(Player* player) {
     if (this->getPosition().x == 0) {
         player->setPosition(Position{player->getPosition().x + 100, player->getPosition().y});
-        return;
+        return nullptr;
     }
 
     if (this->getPosition().x == 600) {
         player->setPosition(Position{player->getPosition().x - 100, player->getPosition().y});
-        return;
+        return nullptr;
     }
 
     if (this->getPosition().y == 0) {
         player->setPosition(Position{player->getPosition().x, player->getPosition().y + 100});
-        return;
+        return nullptr;
     }
 
-    if (this->getPosition().y != 600) return;
+    if (this->getPosition().y != 600) return nullptr;
     player->setPosition(Position{player->getPosition().x, player->getPosition().y - 100});
+    return nullptr;
 }
 
 Floor::Floor(const Position position) : Entity(position) {
@@ -105,4 +120,11 @@ Floor::Floor(const Position position) : Entity(position) {
 
 Enemy::Enemy(const Position position) : Entity(position) {
     this->setSprite("../resources/enemy.png");
+}
+
+Entity* Enemy::interacts(Player *player) {
+    if (player->getAttackPower() == 1) return this;
+    player->setPosition(player->getPreviousPosition());
+
+    return nullptr;
 }

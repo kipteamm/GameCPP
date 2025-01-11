@@ -21,7 +21,7 @@ public:
 
     Player* getPlayer() const;
     void setPlayer(Player* player);
-    void removePlayer();
+    void removeEntity(Entity* entity);
 
     std::vector<Entity*> getEntites() const;
     void addEntity(Entity* entity);

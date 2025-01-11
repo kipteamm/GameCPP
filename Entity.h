@@ -27,7 +27,7 @@ public:
     Position getPosition() const;
     void setPosition(const Position);
 
-    virtual void interacts(Player* player);
+    virtual Entity* interacts(Player* player);
 
     // Onderstaande functies niet aanpassen!
     void setSprite(const std::string &img_path);
@@ -43,27 +43,32 @@ private:
 
 class Player : public Entity {
 public:
-    explicit Player(Position position);
+    explicit Player(Position position, const int attackPower);
 
     void update(sf::Event* event) override;
+    void setPreviousPosition(Position position);
+    Position getPreviousPosition() const;
 
     int getAttackPower() const;
     void setAttackPower(const int attack_power);
 
 private:
+    Position previousPosition;
     int attackPower = 0;
 };
 
 class Weapon : public Entity {
 public:
     explicit Weapon(Position position);
+
+    Entity* interacts(Player* player);
 };
 
 class Wall : public Entity {
 public:
     explicit Wall(Position position);
 
-    void interacts(Player* player);
+    Entity* interacts(Player* player);
 };
 
 class Floor : public Entity {
@@ -74,6 +79,8 @@ public:
 class Enemy : public Entity {
 public:
     explicit Enemy(Position position);
+
+    Entity* interacts(Player* player);
 };
 
 #endif //ENTITY_H

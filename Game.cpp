@@ -65,7 +65,7 @@ void Game::loadLine(std::string& line, const int lineIndex) {
                 room->addEntity(new Weapon(entityPosition));
                 break;
             case '@':
-                room->setPlayer(new Player(entityPosition));
+                room->setPlayer(new Player(entityPosition, 0));
                 room->addEntity(room->getPlayer());
                 room->addEntity(new Floor(entityPosition));
 
@@ -102,10 +102,11 @@ void Game::loadMap(const std::string& filename) {
 void Game::setRoom(const std::pair<int, int>& position) {
     if (const auto it = this->rooms.find(position); it != this->rooms.end()) {
         const Position playerPosition = this->currentRoom->getPlayer()->getPosition();
-        this->currentRoom->removePlayer();
+        const int attackPower = this->currentRoom->getPlayer()->getAttackPower();
+        this->currentRoom->removeEntity(this->currentRoom->getPlayer());
         this->currentRoom = it->second;
 
-        this->currentRoom->setPlayer(new Player(Position{600 - playerPosition.x, 600 - playerPosition.y}));
+        this->currentRoom->setPlayer(new Player(Position{600 - playerPosition.x, 600 - playerPosition.y}, attackPower));
         this->currentRoom->addEntity(this->currentRoom->getPlayer());
     }
 }
