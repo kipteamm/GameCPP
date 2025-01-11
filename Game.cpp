@@ -62,7 +62,7 @@ void Game::loadLine(std::string& line, const int lineIndex) {
             this->rooms[position] = room;
         }
 
-        Position entityPosition{(lineX % 7) * 100, (lineIndex % 7) * 100};
+        Position entityPosition{(lineX % 7) * 100 + (roomX * 700), (lineIndex % 7) * 100 + (roomY * 700)};
 
         switch (line[lineX]) {
             case '#':
@@ -121,21 +121,23 @@ void Game::setRoom(const std::pair<int, int>& position, bool horizontal) {
     this->currentRoom->removeEntity(this->currentRoom->getPlayer());
     this->currentRoom = it->second;
 
-    this->currentRoom->setPlayer(new Player(Position{(horizontal? 700: 600) - std::abs(playerPosition.x), (horizontal? 600: 700) - std::abs(playerPosition.y)}, attackPower));
+    this->currentRoom->setPlayer(new Player(playerPosition, attackPower));
     this->currentRoom->addEntity(this->currentRoom->getPlayer());
 }
 
 void Game::setCurrentRoom() {
     const Position playerPosition = this->currentRoom->getPlayer()->getPosition();
     const Position roomPosition = this->currentRoom->getPosition();
+    const int posX = playerPosition.x % 700;
+    const int posY = playerPosition.y % 700;
 
-    if (playerPosition.x == -100) {
+    if (posX == 600) {
         this->setRoom(std::pair<int, int>{roomPosition.x - 1, roomPosition.y}, true);
-    } else if (playerPosition.x == 700) {
+    } else if (posX == 0) {
         this->setRoom(std::pair<int, int>{roomPosition.x + 1, roomPosition.y}, true);
-    } else if (playerPosition.y == -100) {
+    } else if (posY == 600) {
         this->setRoom(std::pair<int, int>{roomPosition.x, roomPosition.y - 1}, false);
-    } else if (playerPosition.y == 700) {
+    } else if (posY == 0) {
         this->setRoom(std::pair<int, int>{roomPosition.x, roomPosition.y + 1}, false);
     };
 }
