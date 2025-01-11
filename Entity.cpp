@@ -36,6 +36,10 @@ void Entity::setPosition(const Position) {
     this->position = position;
 }
 
+Player::Player(const Position position) : Entity(position) {
+    this->setSprite("../resources/player.png");
+}
+
 void Player::update(sf::Event* event) {
     switch (event->key.code) {
         case sf::Keyboard::Left:
@@ -62,3 +66,18 @@ void Player::setAttackPower(const int attack_power) {
     this->attackPower = attack_power;
 }
 
+Weapon::Weapon(const Position position) : Entity(position) {
+    this->setSprite("../resources/weapon.png");
+}
+
+Wall::Wall(const Position position) : Entity(position) {
+    this->setSprite("../resources/wall.png");
+}
+
+Floor::Floor(const Position position) : Entity(position) {
+    this->setSprite("../resources/floor.png");
+}
+
+Enemy::Enemy(const Position position) : Entity(position) {
+    this->setSprite("../resources/enemy.png");
+}

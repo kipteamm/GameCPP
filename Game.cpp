@@ -11,7 +11,7 @@
 Game::Game(sf::RenderWindow* window): window(window), rooms() {}
 
 void Game::update() {
-    //setCurrentRoom();
+    setCurrentRoom();
     this->window->clear();
     if (currentRoom) { currentRoom->render(this->window); }
     this->window->display();
@@ -24,7 +24,7 @@ void Game::update() {
                 window->close();
             } else if (event.type == sf::Event::KeyPressed) {
                 currentRoom->update(&event);
-                //setCurrentRoom();
+                setCurrentRoom();
                 this->window->clear();
                 currentRoom->render(this->window);
                 this->window->display();
@@ -34,11 +34,7 @@ void Game::update() {
 
 }
 
-void Game::addRoom(const std::pair<int, int> position, Room *room) {
-    this->rooms[position] = room;
-}
-
-void loadLine(Game *game, std::string& line, const int lineIndex) {
+void Game::loadLine(std::string& line, const int lineIndex) {
     const int roomY = std::floor(lineIndex / 7);
 
     for (int lineX = 0; lineX < line.size(); lineX++) {
@@ -46,11 +42,11 @@ void loadLine(Game *game, std::string& line, const int lineIndex) {
         std::pair position{roomX, roomY};
         Room* room = nullptr;
 
-        if (auto it = game->getRooms().find(position); it != game->getRooms().end()) {
+        if (auto it = this->rooms.find(position); it != this->rooms.end()) {
             room = it->second;
         } else {
             room = new Room();
-            game->addRoom(position, room);
+            this->rooms[position] = room;
         }
 
         Position entityPosition{(lineIndex % 7) * 100, (lineX % 7) * 100};
@@ -71,7 +67,7 @@ void loadLine(Game *game, std::string& line, const int lineIndex) {
             case '@':
                 room->addEntity(new Player(entityPosition));
                 room->addEntity(new Floor(entityPosition));
-                game->setCurrentRoom(room);
+                this->currentRoom = room;
                 break;
             default:
                 std::cout << "Unrecognized character" << std::endl;
@@ -84,21 +80,20 @@ void Game::loadMap(const std::string& filename) {
     std::ifstream file(filename);
     std::vector<std::string> lines;
     std::string line;
-    int lineIndex = 0;
 
     if (!file.is_open()) {
         std::cout << "File not found" << std::endl;
         return;
     }
 
+    int lineIndex = 0;
     while (std::getline(file, line)) {
-        loadLine(this, line, lineIndex);
+        this->loadLine(line, lineIndex);
         lines.push_back(line);
+        lineIndex++;
     }
 
     file.close();
 }
 
-void Game::setCurrentRoom(Room* currentRoom) {
-    this->currentRoom = currentRoom;
-}
+void Game::setCurrentRoom() {}

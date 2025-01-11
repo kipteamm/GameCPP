@@ -4,6 +4,8 @@
 
 #include "Room.h"
 
+#include <iostream>
+
 Room::Room() {};
 
 void Room::render(sf::RenderWindow* window) const {

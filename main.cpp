@@ -5,12 +5,13 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include <direct.h>
 #include "Game.h"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(700, 700), "Game");
     Game game = Game(&window);
-    game.loadMap("C:/Users/ppetre/Desktop/Universiteit/InleidingProgrammerenGame/resources/map.txt");
+    game.loadMap("../resources/map.txt");
     game.update();
     return 0;
 }

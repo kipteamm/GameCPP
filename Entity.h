@@ -35,7 +35,7 @@ private:
 
 class Player : public Entity {
 public:
-    explicit Player(Position position) : Entity(position) {};
+    explicit Player(Position position);
 
     void update(sf::Event* event) override;
 
@@ -48,22 +48,22 @@ private:
 
 class Weapon : public Entity {
 public:
-    explicit Weapon(Position position) : Entity(position) {};
+    explicit Weapon(Position position);
 };
 
 class Wall : public Entity {
 public:
-    explicit Wall(Position position) : Entity(position) {};
+    explicit Wall(Position position);
 };
 
 class Floor : public Entity {
 public:
-    explicit Floor(Position position) : Entity(position) {};
+    explicit Floor(Position position);
 };
 
 class Enemy : public Entity {
 public:
-    explicit Enemy(Position position) : Entity(position) {};
+    explicit Enemy(Position position);
 };
 
 #endif //ENTITY_H

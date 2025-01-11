@@ -14,18 +14,19 @@ public:
     void update();
 
     const std::map<std::pair<int, int>, Room*>& getRooms() { return rooms; }
-    void addRoom(const std::pair<int, int> position, Room* room);
     Room* getCurrentRoom() { return currentRoom; }
 
     // Deze functies zal je zelf verder moeten aanvullen
     void loadMap(const std::string& filename);
-    void setCurrentRoom(Room* currentRoom);
+    void setCurrentRoom();
 
 
 private:
     sf::RenderWindow* window;
     std::map<std::pair<int, int>, Room*> rooms;
     Room* currentRoom = nullptr;
+
+    void loadLine(std::string& line, const int lineIndex);
 };
 
 
