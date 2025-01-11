@@ -27,6 +27,7 @@ private:
     Room* currentRoom = nullptr;
 
     void loadLine(std::string& line, const int lineIndex);
+    void setRoom(const std::pair<int, int>& position);
 };
 
 

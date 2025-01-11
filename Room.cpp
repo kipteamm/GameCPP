@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-Room::Room() {};
+Room::Room(Position position) : position(position) {};
 
 void Room::render(sf::RenderWindow* window) const {
     Player* player = nullptr;
@@ -21,10 +21,34 @@ void Room::render(sf::RenderWindow* window) const {
 }
 
 void Room::update(sf::Event* event) {
+    this->player->update(event);
     for (Entity* entity : entities) {
+        if (entity == this->player) continue;
         entity->update(event);
+
+        if (entity->getPosition() == this->player->getPosition()) entity->interacts(this->player);
     }
 }
+
+Position Room::getPosition() const {
+    return this->position;
+}
+
+
+Player *Room::getPlayer() const {
+    return this->player;
+}
+
+
+void Room::setPlayer(Player *player) {
+    this->player = player;
+}
+
+void Room::removePlayer() {
+    this->entities.erase(std::remove(this->entities.begin(), this->entities.end(), this->player), this->entities.end());
+    this->player = nullptr;
+}
+
 
 std::vector<Entity *> Room::getEntites() const {
     return this->entities;

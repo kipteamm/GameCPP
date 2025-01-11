@@ -36,6 +36,10 @@ void Entity::setPosition(const Position position) {
     this->position = position;
 }
 
+void Entity::interacts(Player* player) {
+
+}
+
 Player::Player(const Position position) : Entity(position) {
     this->setSprite("../resources/player.png");
 }
@@ -73,6 +77,26 @@ Weapon::Weapon(const Position position) : Entity(position) {
 
 Wall::Wall(const Position position) : Entity(position) {
     this->setSprite("../resources/wall.png");
+}
+
+void Wall::interacts(Player* player) {
+    if (this->getPosition().x == 0) {
+        player->setPosition(Position{player->getPosition().x + 100, player->getPosition().y});
+        return;
+    }
+
+    if (this->getPosition().x == 600) {
+        player->setPosition(Position{player->getPosition().x - 100, player->getPosition().y});
+        return;
+    }
+
+    if (this->getPosition().y == 0) {
+        player->setPosition(Position{player->getPosition().x, player->getPosition().y + 100});
+        return;
+    }
+
+    if (this->getPosition().y != 600) return;
+    player->setPosition(Position{player->getPosition().x, player->getPosition().y - 100});
 }
 
 Floor::Floor(const Position position) : Entity(position) {

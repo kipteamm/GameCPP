@@ -10,7 +10,13 @@
 struct Position {
     int x;
     int y;
+
+    bool operator == (const Position& other) const {
+        return x == other.x && y == other.y;
+    }
 };
+
+class Player;
 
 class Entity {
 public:
@@ -20,6 +26,8 @@ public:
 
     Position getPosition() const;
     void setPosition(const Position);
+
+    virtual void interacts(Player* player);
 
     // Onderstaande functies niet aanpassen!
     void setSprite(const std::string &img_path);
@@ -54,6 +62,8 @@ public:
 class Wall : public Entity {
 public:
     explicit Wall(Position position);
+
+    void interacts(Player* player);
 };
 
 class Floor : public Entity {

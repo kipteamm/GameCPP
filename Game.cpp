@@ -42,14 +42,14 @@ void Game::loadLine(std::string& line, const int lineIndex) {
         std::pair position{roomX, roomY};
         Room* room = nullptr;
 
-        if (auto it = this->rooms.find(position); it != this->rooms.end()) {
+        if (const auto it = this->rooms.find(position); it != this->rooms.end()) {
             room = it->second;
         } else {
-            room = new Room();
+            room = new Room(Position{roomX, roomY});
             this->rooms[position] = room;
         }
 
-        Position entityPosition{(lineIndex % 7) * 100, (lineX % 7) * 100};
+        Position entityPosition{(lineX % 7) * 100, (lineIndex % 7) * 100};
 
         switch (line[lineX]) {
             case '#':
@@ -65,9 +65,12 @@ void Game::loadLine(std::string& line, const int lineIndex) {
                 room->addEntity(new Weapon(entityPosition));
                 break;
             case '@':
-                room->addEntity(new Player(entityPosition));
+                room->setPlayer(new Player(entityPosition));
+                room->addEntity(room->getPlayer());
                 room->addEntity(new Floor(entityPosition));
+
                 this->currentRoom = room;
+
                 break;
             default:
                 std::cout << "Unrecognized character" << std::endl;
@@ -96,4 +99,33 @@ void Game::loadMap(const std::string& filename) {
     file.close();
 }
 
-void Game::setCurrentRoom() {}
+void Game::setRoom(const std::pair<int, int>& position) {
+    if (const auto it = this->rooms.find(position); it != this->rooms.end()) {
+        const Position playerPosition = this->currentRoom->getPlayer()->getPosition();
+        this->currentRoom->removePlayer();
+        this->currentRoom = it->second;
+
+        this->currentRoom->setPlayer(new Player(Position{600 - playerPosition.x, 600 - playerPosition.y}));
+        this->currentRoom->addEntity(this->currentRoom->getPlayer());
+    }
+}
+
+void Game::setCurrentRoom() {
+    const Position playerPosition = this->currentRoom->getPlayer()->getPosition();
+    const Position roomPosition = this->currentRoom->getPosition();
+
+    if (playerPosition.x == 0) {
+        return this->setRoom(std::pair{roomPosition.x - 1, roomPosition.y});
+    }
+
+    if (playerPosition.x == 600) {
+        return this->setRoom(std::pair{roomPosition.x + 1, roomPosition.y});
+    }
+
+    if (playerPosition.y == 0) {
+        return this->setRoom(std::pair{roomPosition.x, roomPosition.y - 1});
+    }
+
+    if (playerPosition.y != 600) return;
+    return this->setRoom(std::pair{roomPosition.x, roomPosition.y + 1});
+}
