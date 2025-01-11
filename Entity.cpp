@@ -32,7 +32,7 @@ Position Entity::getPosition() const {
     return this->position;
 }
 
-void Entity::setPosition(const Position) {
+void Entity::setPosition(const Position position) {
     this->position = position;
 }
 
@@ -41,19 +41,20 @@ Player::Player(const Position position) : Entity(position) {
 }
 
 void Player::update(sf::Event* event) {
+    Position position = this->getPosition();
     switch (event->key.code) {
         case sf::Keyboard::Left:
-            // Move to the left
-                break;
+            this->setPosition(Position{position.x - 100, position.y});
+            break;
         case sf::Keyboard::Right:
-            // Move to the right
-                break;
+            this->setPosition(Position{position.x + 100, position.y});
+            break;
         case sf::Keyboard::Up:
-            // Move up
-                break;
+            this->setPosition(Position{position.x, position.y - 100});
+            break;
         case sf::Keyboard::Down:
-            // Move down
-                break;
+            this->setPosition(Position{position.x, position.y + 100});
+            break;
         default: break;
     }
 }
