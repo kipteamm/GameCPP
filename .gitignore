@@ -1,0 +1,11 @@
+cmake-build-debug/
+
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+*.log
+
+CMakeCache.txt
+CMakeFiles/
