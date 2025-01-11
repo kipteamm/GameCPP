@@ -9,7 +9,8 @@
 
 class Room {
 public:
-    Room(Position position);
+    Room();
+    explicit Room(const Position position);
 
     // Deze functie niet aanpassen!
     void render(sf::RenderWindow* window) const;
@@ -23,7 +24,7 @@ public:
     void setPlayer(Player* player);
     void removeEntity(Entity* entity);
 
-    std::vector<Entity*> getEntites() const;
+    std::vector<Entity*> getEntities() const;
     void addEntity(Entity* entity);
 
 private:

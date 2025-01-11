@@ -3,10 +3,11 @@
 //
 
 #include "Room.h"
-
+#include <algorithm>
 #include <iostream>
 
-Room::Room(Position position) : position(position) {};
+Room::Room() : position() {};
+Room::Room(const Position position) : position(position) {};
 
 void Room::render(sf::RenderWindow* window) const {
     Player* player = nullptr;
@@ -60,7 +61,7 @@ void Room::removeEntity(Entity* entity) {
 }
 
 
-std::vector<Entity *> Room::getEntites() const {
+std::vector<Entity *> Room::getEntities() const {
     return this->entities;
 }
 

@@ -8,6 +8,7 @@
 #include <cmath>
 #include <iostream>
 
+Game::Game() : window(), rooms() {};
 Game::Game(sf::RenderWindow* window): window(window), rooms() {}
 
 void Game::update() {
@@ -34,15 +35,27 @@ void Game::update() {
 
 }
 
+std::vector<Room *> Game::getRooms() const {
+    std::vector<Room *> rooms;
+    rooms.reserve(this->rooms.size());
+
+    for (const auto& [_, value] : this->rooms) {
+        rooms.push_back(value);
+    }
+
+    return rooms;
+}
+
 void Game::loadLine(std::string& line, const int lineIndex) {
     const int roomY = std::floor(lineIndex / 7);
 
     for (int lineX = 0; lineX < line.size(); lineX++) {
         const int roomX = std::floor(lineX / 7);
-        std::pair position{roomX, roomY};
+        std::pair<int, int> position{roomX, roomY};
         Room* room = nullptr;
 
-        if (const auto it = this->rooms.find(position); it != this->rooms.end()) {
+        const auto it = this->rooms.find(position);
+        if (it != this->rooms.end()) {
             room = it->second;
         } else {
             room = new Room(Position{roomX, roomY});
@@ -99,34 +112,30 @@ void Game::loadMap(const std::string& filename) {
     file.close();
 }
 
-void Game::setRoom(const std::pair<int, int>& position) {
-    if (const auto it = this->rooms.find(position); it != this->rooms.end()) {
-        const Position playerPosition = this->currentRoom->getPlayer()->getPosition();
-        const int attackPower = this->currentRoom->getPlayer()->getAttackPower();
-        this->currentRoom->removeEntity(this->currentRoom->getPlayer());
-        this->currentRoom = it->second;
+void Game::setRoom(const std::pair<int, int>& position, bool horizontal) {
+    const auto it = this->rooms.find(position);
+    if (it == this->rooms.end()) return;
 
-        this->currentRoom->setPlayer(new Player(Position{600 - playerPosition.x, 600 - playerPosition.y}, attackPower));
-        this->currentRoom->addEntity(this->currentRoom->getPlayer());
-    }
+    const Position playerPosition = this->currentRoom->getPlayer()->getPosition();
+    const int attackPower = this->currentRoom->getPlayer()->getAttackPower();
+    this->currentRoom->removeEntity(this->currentRoom->getPlayer());
+    this->currentRoom = it->second;
+
+    this->currentRoom->setPlayer(new Player(Position{(horizontal? 700: 600) - std::abs(playerPosition.x), (horizontal? 600: 700) - std::abs(playerPosition.y)}, attackPower));
+    this->currentRoom->addEntity(this->currentRoom->getPlayer());
 }
 
 void Game::setCurrentRoom() {
     const Position playerPosition = this->currentRoom->getPlayer()->getPosition();
     const Position roomPosition = this->currentRoom->getPosition();
 
-    if (playerPosition.x == 0) {
-        return this->setRoom(std::pair{roomPosition.x - 1, roomPosition.y});
-    }
-
-    if (playerPosition.x == 600) {
-        return this->setRoom(std::pair{roomPosition.x + 1, roomPosition.y});
-    }
-
-    if (playerPosition.y == 0) {
-        return this->setRoom(std::pair{roomPosition.x, roomPosition.y - 1});
-    }
-
-    if (playerPosition.y != 600) return;
-    return this->setRoom(std::pair{roomPosition.x, roomPosition.y + 1});
+    if (playerPosition.x == -100) {
+        this->setRoom(std::pair<int, int>{roomPosition.x - 1, roomPosition.y}, true);
+    } else if (playerPosition.x == 700) {
+        this->setRoom(std::pair<int, int>{roomPosition.x + 1, roomPosition.y}, true);
+    } else if (playerPosition.y == -100) {
+        this->setRoom(std::pair<int, int>{roomPosition.x, roomPosition.y - 1}, false);
+    } else if (playerPosition.y == 700) {
+        this->setRoom(std::pair<int, int>{roomPosition.x, roomPosition.y + 1}, false);
+    };
 }

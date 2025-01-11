@@ -5,8 +5,8 @@
 #include "Entity.h"
 #include <iostream>
 
+Entity::Entity() : position() {};
 Entity::Entity(const Position position) : position(position) {};
-
 
 void Entity::setSprite(const std::string& img_path) {
     if (!this->texture.loadFromFile(img_path)) {
@@ -40,6 +40,7 @@ Entity* Entity::interacts(Player* player) {
     return nullptr;
 }
 
+Player::Player() : Entity(), attackPower() {};
 Player::Player(const Position position, const int attackPower) : Entity(position), attackPower(attackPower) {
     this->setSprite("../resources/player.png");
 }
@@ -80,6 +81,7 @@ void Player::setAttackPower(const int attack_power) {
     this->attackPower = attack_power;
 }
 
+Weapon::Weapon() : Entity() {};
 Weapon::Weapon(const Position position) : Entity(position) {
     this->setSprite("../resources/weapon.png");
 }
@@ -89,6 +91,7 @@ Entity* Weapon::interacts(Player* player) {
     return this;
 }
 
+Wall::Wall() : Entity() {};
 Wall::Wall(const Position position) : Entity(position) {
     this->setSprite("../resources/wall.png");
 }
@@ -114,10 +117,12 @@ Entity* Wall::interacts(Player* player) {
     return nullptr;
 }
 
+Floor::Floor() : Entity() {};
 Floor::Floor(const Position position) : Entity(position) {
     this->setSprite("../resources/floor.png");
 }
 
+Enemy::Enemy() : Entity() {};
 Enemy::Enemy(const Position position) : Entity(position) {
     this->setSprite("../resources/enemy.png");
 }

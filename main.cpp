@@ -13,5 +13,8 @@ int main() {
     Game game = Game(&window);
     game.loadMap("../resources/map.txt");
     game.update();
+    for (const Room* room: game.getRooms()) {
+        std::cout << room << std::endl;
+    };
     return 0;
 }

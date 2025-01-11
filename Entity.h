@@ -20,6 +20,7 @@ class Player;
 
 class Entity {
 public:
+    Entity();
     explicit Entity(Position position);
 
     virtual void update(sf::Event* event);
@@ -35,7 +36,7 @@ public:
     ~Entity() = default;
 
 private:
-    Position position;
+    Position position{};
     sf::Sprite sprite;
     sf::Texture texture;
 };
@@ -43,6 +44,7 @@ private:
 
 class Player : public Entity {
 public:
+    Player();
     explicit Player(Position position, const int attackPower);
 
     void update(sf::Event* event) override;
@@ -53,12 +55,13 @@ public:
     void setAttackPower(const int attack_power);
 
 private:
-    Position previousPosition;
+    Position previousPosition = Position{0,0};
     int attackPower = 0;
 };
 
 class Weapon : public Entity {
 public:
+    Weapon();
     explicit Weapon(Position position);
 
     Entity* interacts(Player* player);
@@ -66,6 +69,7 @@ public:
 
 class Wall : public Entity {
 public:
+    Wall();
     explicit Wall(Position position);
 
     Entity* interacts(Player* player);
@@ -73,11 +77,13 @@ public:
 
 class Floor : public Entity {
 public:
+    Floor();
     explicit Floor(Position position);
 };
 
 class Enemy : public Entity {
 public:
+    Enemy();
     explicit Enemy(Position position);
 
     Entity* interacts(Player* player);

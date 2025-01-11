@@ -6,14 +6,16 @@
 #define GAME_H
 
 #include "Room.h"
+#include <map>
 
 class Game {
 public:
     // Deze functies niet aanpassen!
+    Game();
     Game(sf::RenderWindow* window);
     void update();
 
-    const std::map<std::pair<int, int>, Room*>& getRooms() { return rooms; }
+    std::vector<Room*> getRooms() const;
     Room* getCurrentRoom() { return currentRoom; }
 
     // Deze functies zal je zelf verder moeten aanvullen
@@ -27,7 +29,7 @@ private:
     Room* currentRoom = nullptr;
 
     void loadLine(std::string& line, const int lineIndex);
-    void setRoom(const std::pair<int, int>& position);
+    void setRoom(const std::pair<int, int>& position, bool horizontal);
 };
 
 
