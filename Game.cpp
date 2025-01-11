@@ -44,7 +44,7 @@ void loadLine(Game *game, std::string& line, const int lineIndex) {
     for (int lineX = 0; lineX < line.size(); lineX++) {
         const int roomX = std::floor(lineX / 7);
         std::pair position{roomX, roomY};
-        Room* room;
+        Room* room = nullptr;
 
         if (auto it = game->getRooms().find(position); it != game->getRooms().end()) {
             room = it->second;
@@ -64,7 +64,7 @@ void loadLine(Game *game, std::string& line, const int lineIndex) {
                 break;
             case '%':
                 room->addEntity(new Enemy(entityPosition));
-                break;
+            break;
             case '!':
                 room->addEntity(new Weapon(entityPosition));
                 break;
@@ -72,11 +72,10 @@ void loadLine(Game *game, std::string& line, const int lineIndex) {
                 room->addEntity(new Player(entityPosition));
                 room->addEntity(new Floor(entityPosition));
                 game->setCurrentRoom(room);
-
                 break;
             default:
                 std::cout << "Unrecognized character" << std::endl;
-                break;;
+                break;
         }
     }
 }
@@ -89,6 +88,7 @@ void Game::loadMap(const std::string& filename) {
 
     if (!file.is_open()) {
         std::cout << "File not found" << std::endl;
+        return;
     }
 
     while (std::getline(file, line)) {

@@ -13,7 +13,7 @@ public:
     Game(sf::RenderWindow* window);
     void update();
 
-    std::map<std::pair<int, int>, Room *> getRooms() { return rooms; }
+    const std::map<std::pair<int, int>, Room*>& getRooms() { return rooms; }
     void addRoom(const std::pair<int, int> position, Room* room);
     Room* getCurrentRoom() { return currentRoom; }
 
