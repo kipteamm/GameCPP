@@ -5,6 +5,9 @@
 #include "Entity.h"
 #include <iostream>
 
+Entity::Entity(const Position position) : position(position) {};
+
+
 void Entity::setSprite(const std::string& img_path) {
     if (!this->texture.loadFromFile(img_path)) {
         std::cerr << "Failed to load texture" << std::endl;

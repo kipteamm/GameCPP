@@ -4,6 +4,8 @@
 
 #include "Room.h"
 
+Room::Room() {};
+
 void Room::render(sf::RenderWindow* window) const {
     Player* player = nullptr;
     std::vector<Entity*> others = {};
@@ -26,7 +28,7 @@ std::vector<Entity *> Room::getEntites() const {
     return this->entities;
 }
 
-void Room::addeEntity(Entity* entity) {
+void Room::addEntity(Entity* entity) {
     this->entities.push_back(entity);
 }
 

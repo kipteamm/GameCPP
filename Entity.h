@@ -14,6 +14,8 @@ struct Position {
 
 class Entity {
 public:
+    explicit Entity(Position position);
+
     virtual void update(sf::Event* event);
 
     Position getPosition() const;
@@ -33,6 +35,8 @@ private:
 
 class Player : public Entity {
 public:
+    explicit Player(Position position) : Entity(position) {};
+
     void update(sf::Event* event) override;
 
     int getAttackPower() const;
@@ -42,12 +46,24 @@ private:
     int attackPower = 0;
 };
 
-class Weapon : public Entity {};
+class Weapon : public Entity {
+public:
+    explicit Weapon(Position position) : Entity(position) {};
+};
 
-class Wall : public Entity {};
+class Wall : public Entity {
+public:
+    explicit Wall(Position position) : Entity(position) {};
+};
 
-class Floor : public Entity {};
+class Floor : public Entity {
+public:
+    explicit Floor(Position position) : Entity(position) {};
+};
 
-class Enemy : public Entity {};
+class Enemy : public Entity {
+public:
+    explicit Enemy(Position position) : Entity(position) {};
+};
 
 #endif //ENTITY_H

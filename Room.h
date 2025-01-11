@@ -9,6 +9,8 @@
 
 class Room {
 public:
+    Room();
+
     // Deze functie niet aanpassen!
     void render(sf::RenderWindow* window) const;
 
@@ -16,7 +18,7 @@ public:
     void update(sf::Event* event);
 
     std::vector<Entity*> getEntites() const;
-    void addeEntity(Entity* entity);
+    void addEntity(Entity* entity);
 
 private:
     std::vector<Entity*> entities;

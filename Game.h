@@ -12,17 +12,19 @@ public:
     // Deze functies niet aanpassen!
     Game(sf::RenderWindow* window);
     void update();
-    std::vector<Room *> getRooms() { return rooms; }
+
+    std::map<std::pair<int, int>, Room *> getRooms() { return rooms; }
+    void addRoom(const std::pair<int, int> position, Room* room);
     Room* getCurrentRoom() { return currentRoom; }
 
     // Deze functies zal je zelf verder moeten aanvullen
     void loadMap(const std::string& filename);
-    void setCurrentRoom();
+    void setCurrentRoom(Room* currentRoom);
 
 
 private:
     sf::RenderWindow* window;
-    std::vector<Room*> rooms;
+    std::map<std::pair<int, int>, Room*> rooms;
     Room* currentRoom = nullptr;
 };
 
