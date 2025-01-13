@@ -22,10 +22,10 @@ public:
 
     Player* getPlayer() const;
     void setPlayer(Player* player);
-    void removeEntity(Entity* entity);
 
     std::vector<Entity*> getEntities() const;
     void addEntity(Entity* entity);
+    void removeEntity(Entity* entity);
 
 private:
     std::vector<Entity*> entities;

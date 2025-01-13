@@ -85,10 +85,20 @@ void Game::loadLine(std::string& line, const int lineIndex) {
                 this->currentRoom = room;
 
                 break;
+            case ' ':
+                break;
             default:
                 std::cout << "Unrecognized character" << std::endl;
                 break;
         }
+    }
+
+    for (auto it = this->rooms.begin(); it != this->rooms.end();) {
+        if (!it->second->getEntities().empty()) {
+            ++it;
+            continue;
+        }
+        it = this->rooms.erase(it);
     }
 }
 
@@ -112,9 +122,9 @@ void Game::loadMap(const std::string& filename) {
     file.close();
 }
 
-void Game::setRoom(const std::pair<int, int>& position, bool horizontal) {
+bool Game::setRoom(const std::pair<int, int>& position) {
     const auto it = this->rooms.find(position);
-    if (it == this->rooms.end()) return;
+    if (it == this->rooms.end()) return false;
 
     const Position playerPosition = this->currentRoom->getPlayer()->getPosition();
     const int attackPower = this->currentRoom->getPlayer()->getAttackPower();
@@ -123,21 +133,31 @@ void Game::setRoom(const std::pair<int, int>& position, bool horizontal) {
 
     this->currentRoom->setPlayer(new Player(playerPosition, attackPower));
     this->currentRoom->addEntity(this->currentRoom->getPlayer());
+    return true;
 }
 
 void Game::setCurrentRoom() {
     const Position playerPosition = this->currentRoom->getPlayer()->getPosition();
     const Position roomPosition = this->currentRoom->getPosition();
-    const int posX = playerPosition.x % 700;
-    const int posY = playerPosition.y % 700;
+    bool roomExists = true;
 
-    if (posX == 600) {
-        this->setRoom(std::pair<int, int>{roomPosition.x - 1, roomPosition.y}, true);
-    } else if (posX == 0) {
-        this->setRoom(std::pair<int, int>{roomPosition.x + 1, roomPosition.y}, true);
-    } else if (posY == 600) {
-        this->setRoom(std::pair<int, int>{roomPosition.x, roomPosition.y - 1}, false);
-    } else if (posY == 0) {
-        this->setRoom(std::pair<int, int>{roomPosition.x, roomPosition.y + 1}, false);
-    };
+    if (playerPosition.x + 100 == roomPosition.x * 700) {
+        roomExists = this->setRoom(std::pair<int, int>{roomPosition.x - 1, roomPosition.y});
+    } else if (playerPosition.x == (roomPosition.x + 1) * 700) {
+        roomExists = this->setRoom(std::pair<int, int>{roomPosition.x + 1, roomPosition.y});
+    } else if (playerPosition.y + 100 == roomPosition.y * 700) {
+        roomExists = this->setRoom(std::pair<int, int>{roomPosition.x, roomPosition.y - 1});
+    } else if (playerPosition.y == (roomPosition.y + 1) * 700) {
+        roomExists = this->setRoom(std::pair<int, int>{roomPosition.x, roomPosition.y + 1});
+    }
+
+    if (roomExists) return;
+    this->currentRoom->getPlayer()->setPosition(this->currentRoom->getPlayer()->getPreviousPosition());
+}
+
+
+void Game::debug() {
+    for (const auto [position, room]: this->rooms) {
+        std::cout << "(" << position.first << ", " << position.second << ")" << " -> " << room->getEntities().size() << "\n";
+    }
 }

@@ -3,6 +3,8 @@
 //
 
 #include "Entity.h"
+
+#include <cmath>
 #include <iostream>
 
 Entity::Entity() : position() {};
@@ -24,9 +26,7 @@ void Entity::render(sf::RenderWindow *window) {
     window->draw(sprite);
 }
 
-void Entity::update(sf::Event* event) {
-
-}
+void Entity::update(sf::Event* event, Position roomPosition) {}
 
 Position Entity::getPosition() const {
     return this->position;
@@ -45,20 +45,30 @@ Player::Player(const Position position, const int attackPower) : Entity(position
     this->setSprite("../resources/player.png");
 }
 
-void Player::update(sf::Event* event) {
+bool exceedsMap(const int x) {
+    const int largestMultiple = std::round(x / 700) * 700;
+    return x > largestMultiple;
+}
+
+void Player::update(sf::Event* event, Position roomPosition) {
     Position position = this->getPosition();
     this->setPreviousPosition(position);
+
     switch (event->key.code) {
         case sf::Keyboard::Left:
+            if (position.x + 100 == roomPosition.x * 700) break;
             this->setPosition(Position{position.x - 100, position.y});
             break;
         case sf::Keyboard::Right:
+            if (position.x == (roomPosition.x + 1) * 700) break;
             this->setPosition(Position{position.x + 100, position.y});
             break;
         case sf::Keyboard::Up:
+            if (position.y + 100 == roomPosition.y * 700) break;
             this->setPosition(Position{position.x, position.y - 100});
             break;
         case sf::Keyboard::Down:
+            if (position.y == (roomPosition.y + 1) * 700) break;
             this->setPosition(Position{position.x, position.y + 100});
             break;
         default: break;
@@ -97,11 +107,6 @@ Wall::Wall(const Position position) : Entity(position) {
 }
 
 Entity* Wall::interacts(Player* player) {
-    const int posX = player->getPosition().x % 700;
-    const int posY = player->getPosition().y % 700;
-
-    if (posX != 0 && posX != 600 && posY != 0 && posY != 600) return nullptr;
-
     player->setPosition(player->getPreviousPosition());
     return nullptr;
 }

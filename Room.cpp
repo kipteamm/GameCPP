@@ -22,10 +22,10 @@ void Room::render(sf::RenderWindow* window) const {
 }
 
 void Room::update(sf::Event* event) {
-    this->player->update(event);
+    this->player->update(event, this->getPosition());
     for (Entity* entity : entities) {
         if (entity == this->player) continue;
-        entity->update(event);
+        entity->update(event, this->getPosition());
 
         if (!(entity->getPosition() == this->player->getPosition())) continue;
         Entity* entityToBeRemoved = entity->interacts(this->player);
@@ -49,6 +49,14 @@ void Room::setPlayer(Player *player) {
     this->player = player;
 }
 
+std::vector<Entity *> Room::getEntities() const {
+    return this->entities;
+}
+
+void Room::addEntity(Entity* entity) {
+    this->entities.push_back(entity);
+}
+
 void Room::removeEntity(Entity* entity) {
     this->entities.erase(std::remove(this->entities.begin(), this->entities.end(), entity), this->entities.end());
 
@@ -59,13 +67,3 @@ void Room::removeEntity(Entity* entity) {
 
     this->addEntity(new Floor(entity->getPosition()));
 }
-
-
-std::vector<Entity *> Room::getEntities() const {
-    return this->entities;
-}
-
-void Room::addEntity(Entity* entity) {
-    this->entities.push_back(entity);
-}
-

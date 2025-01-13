@@ -11,10 +11,7 @@
 int main() {
     sf::RenderWindow window(sf::VideoMode(700, 700), "Game");
     Game game = Game(&window);
-    game.loadMap("../resources/map.txt");
+    game.loadMap("../resources/map2.txt");
     game.update();
-    for (const Room* room: game.getRooms()) {
-        std::cout << room << std::endl;
-    };
     return 0;
 }

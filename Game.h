@@ -22,6 +22,8 @@ public:
     void loadMap(const std::string& filename);
     void setCurrentRoom();
 
+    void debug();
+
 
 private:
     sf::RenderWindow* window;
@@ -29,7 +31,7 @@ private:
     Room* currentRoom = nullptr;
 
     void loadLine(std::string& line, const int lineIndex);
-    void setRoom(const std::pair<int, int>& position, bool horizontal);
+    bool setRoom(const std::pair<int, int>& position);
 };
 
 

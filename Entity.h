@@ -23,7 +23,7 @@ public:
     Entity();
     explicit Entity(Position position);
 
-    virtual void update(sf::Event* event);
+    virtual void update(sf::Event* event, Position roomPosition);
 
     Position getPosition() const;
     void setPosition(const Position);
@@ -47,7 +47,7 @@ public:
     Player();
     explicit Player(Position position, const int attackPower);
 
-    void update(sf::Event* event) override;
+    void update(sf::Event* event, Position roomPosition) override;
     void setPreviousPosition(Position position);
     Position getPreviousPosition() const;
 
